@@ -5,7 +5,9 @@
 To learn how to work with GoRoutines, Channels, State I implemented a Space Invaders Game :)
 
   - Usage: 
+  
   -- go run spaceInvadersWithGoRoutines.go
+  
   -- go run spaceInvadersWithGoRoutines.go -flagPieceHeartBeatMS 10 -flagMotherShipHeartBeatMS 10 -flagWidthPx 600 -flagHeightPx 500 -flagSpacingPx 40
 
 # Lessons Learned
