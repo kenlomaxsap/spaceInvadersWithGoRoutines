@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"math/rand"
+	"sync/atomic"
 	"time"
 
 	"github.com/faiface/pixel"
@@ -36,8 +37,15 @@ type msg struct {
 	p    piece
 }
 
+var gos uint64
+
+func callGo(f func()) {
+	atomic.AddUint64(&gos, 1)
+	go f()
+}
+
 func (p *piece) heartBeat() {
-	go p.listen()
+	callGo(p.listen)
 	for range time.NewTicker(time.Duration(flagPieceHeartBeatMS) * time.Millisecond).C {
 		p.in <- msg{cmd: "Move"}
 	}
@@ -93,7 +101,7 @@ func (p *piece) listen() {
 
 func (m *motherShip) heartBeat() {
 	populate()
-	go ms.listen()
+	callGo(ms.listen)
 	var a = 0
 	for range time.NewTicker(time.Duration(flagMotherShipHeartBeatMS) * time.Millisecond).C {
 		a = a + 1
@@ -111,6 +119,8 @@ func (m *motherShip) heartBeat() {
 
 func (m *motherShip) listen() {
 	for {
+		fmt.Printf("Num Go Routines: %v Num msgs in Input1: %v  Num msgs in Input2: %v\n", atomic.LoadUint64(&gos), len(ms.input1), len(ms.input2))
+
 		select {
 		case message := <-m.input2:
 			if message.cmd == "Set" {
@@ -126,7 +136,7 @@ func (m *motherShip) listen() {
 				}
 				p := piece{name: name, kind: message.kind, x: message.p.x, y: message.p.y, alive: true, vx: message.p.vx, vy: message.p.vy, in: make(chan msg)}
 				m.outs[p.name] = &p.in
-				go p.heartBeat()
+				callGo(p.heartBeat)
 			}
 			if message.cmd == "CheckCollisions" {
 				for _, s1 := range m._register {
@@ -164,7 +174,6 @@ func (m *motherShip) listen() {
 						} else {
 							*m.outs["Gun"] <- msg{cmd: "Stop"}
 						}
-						fmt.Printf("MS LEN1  %v  LEN2  %v \n", len(ms.input1), len(ms.input2))
 					}
 				}
 			}
@@ -207,13 +216,13 @@ func populate() {
 func start() {
 	win, _ = pixelgl.NewWindow(pixelgl.WindowConfig{Title: "Exploring GoRoutines", Bounds: pixel.R(0, 0, float64(flagWidthPx), float64(flagHeightPx)), VSync: true})
 	win.SetPos(win.GetPos().Add(pixel.V(0, 1)))
-	go ms.heartBeat()
+	callGo(ms.heartBeat)
 	<-make(chan bool)
 }
 
 var win *pixelgl.Window
 
-var ms = motherShip{_register: make(map[string]piece), outs: make(map[string](*chan msg)), input1: make(chan msg, 2000), input2: make(chan msg, 2000)}
+var ms = motherShip{_register: make(map[string]piece), outs: make(map[string](*chan msg)), input1: make(chan msg, 20000), input2: make(chan msg, 20000)}
 
 var flagPieceHeartBeatMS int
 var flagMotherShipHeartBeatMS int
@@ -223,12 +232,12 @@ var flagSpacingPx int
 
 func main() {
 	flag.IntVar(&flagPieceHeartBeatMS, "flagPieceHeartBeatMS", 10, "Heart Beat for Pieces  MS")
-	flag.IntVar(&flagMotherShipHeartBeatMS, "flagMotherShipHeartBeatMS", 10, "Heart Beat for Mothership MS")
+	flag.IntVar(&flagMotherShipHeartBeatMS, "flagMotherShipHeartBeatMS", 20, "Heart Beat for Mothership MS")
 	flag.IntVar(&flagWidthPx, "flagWidthPx", 500, "Width of screen Px")
 	flag.IntVar(&flagHeightPx, "flagHeightPx", 400, "Height of screen Px")
 	flag.IntVar(&flagSpacingPx, "flagSpacingPx", 40, "Width between aliens Px")
 
 	flag.Parse()
 	pixelgl.Run(start)
-	// go run conc0712.go -flagPieceHeartBeatMS 10 -flagMotherShipHeartBeatMS 10 -flagWidthPx 600 -flagHeightPx 500 -flagSpacingPx 40
+	// callGorun conc0712.callGo-flagPieceHeartBeatMS 10 -flagMotherShipHeartBeatMS 10 -flagWidthPx 600 -flagHeightPx 500 -flagSpacingPx 40
 }
