@@ -7,9 +7,12 @@ To learn how to work with GoRoutines, Channels, State I implemented a Space Inva
   - Usage: 
     - git clone https://github.com/kenlomaxhybris/spaceInvadersWithGoRoutines.git
     - cd spaceInvadersWithGoRoutines/
-    - ./spaceInvadersWithGoRoutines 
-    - go run spaceInvadersWithGoRoutines.go
-    - go run spaceInvadersWithGoRoutines.go -flagPieceHeartBeatMS 10 -flagMotherShipHeartBeatMS 10 -flagWidthPx 600 -flagHeightPx 500 -flagSpacingPx 40
+    - either from binary:
+      - ./spaceInvadersWithGoRoutines 
+    - or from code..
+      - go get
+      - go run spaceInvadersWithGoRoutines.go
+      - go run spaceInvadersWithGoRoutines.go -flagPieceHeartBeatMS 10 -flagMotherShipHeartBeatMS 10 -flagWidthPx 600 -flagHeightPx 500 -flagSpacingPx 40
 
 # Lessons Learned
   - Do not share state across GoRoutines.
