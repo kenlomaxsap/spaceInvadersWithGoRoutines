@@ -5,13 +5,13 @@
 To learn how to work with GoRoutines, Channels, State I implemented a Space Invaders Game :)
 
   - Usage: 
-  
-  -- go run spaceInvadersWithGoRoutines.go
-  
-  -- go run spaceInvadersWithGoRoutines.go -flagPieceHeartBeatMS 10 -flagMotherShipHeartBeatMS 10 -flagWidthPx 600 -flagHeightPx 500 -flagSpacingPx 40
+    - git clone https://github.com/kenlomaxhybris/spaceInvadersWithGoRoutines.git
+    - cd spaceInvadersWithGoRoutines/
+    - ./spaceInvadersWithGoRoutines 
+    - go run spaceInvadersWithGoRoutines.go
+    - go run spaceInvadersWithGoRoutines.go -flagPieceHeartBeatMS 10 -flagMotherShipHeartBeatMS 10 -flagWidthPx 600 -flagHeightPx 500 -flagSpacingPx 40
 
 # Lessons Learned
-
   - Do not share state across GoRoutines.
   - Use Selects and Channels wisely
   - If channels are filling up, find a way to empty them more quickly
