@@ -1,11 +1,13 @@
 # spaceInvadersWithGoRoutines :)
 
-<img src="https://raw.githubusercontent.com/kenlomaxhybris/spaceInvadersWithGoRoutines/master/spaceInvadersWithGoRoutines.png" title=SpaceInvadersWithGoRoutines" alt="SpaceInvadersWithGoRoutines"></a>
+![spaceInvadersWithGoRoutines](https://raw.githubusercontent.com/kenlomaxhybris/spaceInvadersWithGoRoutines/master/spaceInvadersWithGoRoutines.png)
 
 To learn how to work with GoRoutines, Channels, State I implemented a Space Invaders Game :)
 
   - Usage: 
+  
   -- go run spaceInvadersWithGoRoutines.go
+  
   -- go run spaceInvadersWithGoRoutines.go -flagPieceHeartBeatMS 10 -flagMotherShipHeartBeatMS 10 -flagWidthPx 600 -flagHeightPx 500 -flagSpacingPx 40
 
 # Lessons Learned
